@@ -180,7 +180,7 @@ copyright = ""            # default: author.name ↓        # 默认为下面配
     a-email = "mailto:yuhaihan@outlook.com"
     b-stack-overflow = "https://stackoverflow.com"
     c-google = "https://www.google.com"
-    d-github = "https://github.com"
+    d-github = "https://github.com/yuhhMr/coding-diary/issues"
 
 # See https://gohugo.io/about/hugo-and-gdpr/
 [privacy]

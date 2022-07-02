@@ -95,10 +95,8 @@ $ echo $SHELL
 $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"# location in ~/.oh-my-zsh
 $ vim ~/.zshrc # 配置主题和插件
 ```
-
-#### .zshrc配置文件
 <details>
-    <summary>查看代码</summary>
+    <summary>.zshrc</summary>
         <pre>
             <code>
 #If you come from bash you might have to change your $PATH.
@@ -334,9 +332,9 @@ added 1 package in 7s
     You can do this by adding the following line to your $HOME/.profile or /etc/profile (for a system-wide installation):
 
 ```shell
-☁  ~ export PATH=$PATH:/usr/local/go/bin
+☁  ~ export PATH=$PATH:/usr/local/go/bin  
 ```  
-    by deleting the /usr/local/go folder (if it exists), then extract the archive you just downloaded into /usr/local, creating a fresh Go tree in /usr/local/go:
+by deleting the /usr/local/go folder (if it exists), then extract the archive you just downloaded into /usr/local, creating a fresh Go tree in /usr/local/go:
     
 3. 验证配置
 
@@ -359,7 +357,7 @@ go version go1.18.3 linux/amd64
 
 虚拟化技术已经成为一种被大家广泛认可的服务器资源共享方式，它可以在按需构建操作系统实例的过程当中为系统管理员提供极大的灵活性。由于hypervisor虚拟化技术仍然存在一些性能和资源使用效率方面的问题，因此出现了一种称为容器（Container）的新型虚拟化技术来帮助解决这些问题。
 
-    容器技术的出现是为了解决多操作系统/应用程序堆栈的问题：
+容器技术的出现是为了解决多操作系统/应用程序堆栈的问题：
 
 - 目前开源社区中主流的容器技术有docker、containerd和runc等，这里主要学习docker和containerd的部署。  
 - 容器编码工具k8s放弃docker。k8s不能直接与docker通信，只能与 CRI 运行时通信，要与 Docker 通信，就必须使用桥接服务(dockershim)，k8s要与docker通信是通过节点代理Kubelet的Dockershim（k8s社区维护的）将请求转发给管理容器的 Docker 服务。Docker 本身不兼容 CRI 接口，官方并没有实现 CRI 的打算，同时也不支持容器的一些新需求，社区想要摆脱Dockershim的高维护成本。
@@ -438,7 +436,7 @@ $ mkdir -p $DOCKER_CONFIG/cli-plugins
 $ curl -SL https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
 ```
 
-2. 要下载并安装撰写 CLI 插件，请运行：
+2. 要下载并安装 CLI 插件，请运行：
 
 ```shell
 $  chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
@@ -458,4 +456,142 @@ Docker Compose version v2.6.1
 ### containerd
 
 [github](https://github.com/containerd/containerd/blob/main/docs/getting-started.md)
+
+#### Step 1: 安装 containerd
+
+从[官方下载](https://github.com/containerd/containerd/releases)
+存档，验证其sha256sum，然后在以下下提取它：   
+```shell
+$ wget https://github.com/containerd/containerd/releases/download/v1.6.6/containerd-1.6.6-linux-amd64.tar.gz
+$ tar Cxzvf /usr/local containerd-1.6.6-linux-amd64.tar.gz    
+```
+##### systemd
+
+如果您打算通过 systemd 启动 containerd，您还应该从以下位置下载 containerd.service 单元文件https://github.com/containerd/containerd/blob/main/containerd.service 到 /usr/local/lib/systemd/system/containerd.service, 然后运行下面的命令启动它:
+```shell
+$ systemctl daemon-reload
+$ systemctl enable --now containerd
+```
+<details>
+    <summary>containerd.service</summary>
+        <pre>
+            <code>
+ Copyright The containerd Authors.
+#
+#Licensed under the Apache License, Version 2.0 (the "License");
+#you may not use this file except in compliance with the License.
+#You may obtain a copy of the License at
+#
+#http://www.apache.org/licenses/LICENSE-2.0
+#
+#Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#See the License for the specific language governing permissions and
+#limitations under the License.
+
+[Unit]
+Description=containerd container runtime
+Documentation=https://containerd.io
+After=network.target local-fs.target
+
+[Service]
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=/usr/local/bin/containerd
+
+Type=notify
+Delegate=yes
+KillMode=process
+Restart=always
+RestartSec=5
+#Having non-zero Limit*s causes performance problems due to accounting overhead
+#in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNPROC=infinity
+LimitCORE=infinity
+LimitNOFILE=infinity
+#Comment TasksMax if your systemd version does not supports it.
+#Only systemd 226 and above support this version.
+TasksMax=infinity
+OOMScoreAdjust=-999
+
+[Install]
+WantedBy=multi-user.target            
+            </code>
+        </pre>
+</details>
+
+#### Step 2: 安装 runc
+
+从 https://github.com/opencontainers/runc/releases 下载二进制文件，验证其 sha256sum，然后将其安装为：
+```shell
+$ wget / https://github.com/opencontainers/runc/releases/download/v1.1.3/runc.amd64
+$ sudo install -m 755 runc.amd64 /usr/local/sbin/runc
+```
+二进制文件是静态构建的，应该可以在任何Linux发行版上工作。
+
+#### step3 安装 CNI 插件
+
+从https://github.com/containernetworking/plugins/releases 下载存档，验证其sha256sum，然后在以下下提取它：
+```shell
+$ wget / https://github.com/containernetworking/plugins/releases/download/v1.1.1/cni-plugins-linux-amd64-v1.1.1.tgz
+$ sudo  mkdir -p /opt/cni/bin # 选择目录安装并配置环境变量
+$ sudo tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.1.1.tgz 
+```
+
+#### 通过命令行接口与容器交互
+
+有几个命令行界面 （CLI） 项目可用于与 containerd 交互：
+
+|Name|Community|API|Target|Web site|
+|----|---------|---|------|--------|
+|ctr|containerd|Native|For debugging only|None, see ctr --help to learn the usage|
+|nerdctl|containerd (non-core)|Native|General-purpose|https://github.com/containerd/nerdctl |
+|crictl|Kubernetes SIG-node|CRI|For debugging only|https://github.com/kubernetes-sigs/cri-tools/blob/master/docs/crictl.md |
+
+ctr为容器默认集成，推荐使用[nerdctl](https://github.com/containerd/nerdctl)与容器交互
+
+##### 安装 nerdctl
+
+[github](https://github.com/containerd/nerdctl#install)
+
+通过[二进制文件](https://github.com/containerd/nerdctl/releases)安装，
+除了容器之外，还应安装以下组件：
+- CNI插件(见step3)：nerdctl run 命令依赖
+    - 强烈建议使用 v1.1.0 或更高版本。旧版本需要额外的 CNI 隔离插件来隔离网桥网络 （nerdctl network create）。
+- 构建套件BuildKit.（可选）nerdctl build 命令依赖。BuildKit 守护程序 （buildkitd） 需要运行。有关设置另请参阅 [BuildKit 的文档](https://github.com/containerd/nerdctl/blob/master/docs/build.md)。
+- RootlessKit和slirp4netns（可选）：用于无根模式
+    - RootlessKit 必须是 v0.10.0 或更高版本。建议使用 v0.14.1 或更高版本。
+    - slirp4netns 需要是 v0.4.0 或更高版本。建议使用 v1.1.7 或更高版本。
+
+```shell
+$ # 下载安装BuildKit
+$ wget https://github.com/moby/buildkit/releases/download/v0.10.3/buildkit-v0.10.3.linux-amd64.tar.gz
+$ sudo mkdir -p /usr/local/containerd
+$ sudo tar -zxvf buildkit-v0.9.1.linux-amd64.tar.gz -C /usr/local/containerd 
+$ sudo ln -s /usr/local/containerd/bin/buildkitd /usr/local/bin/buildkitd
+$ sudo ln -s /usr/local/containerd/bin/buildctl /usr/local/bin/buildctl
+
+```
+1. 使用systemctl来管理buildkitd守护进程
+
+```shell
+$ sudo cat > /etc/systemd/system/buildkit.service <<EOF
+[Unit]
+Description=BuildKit
+Documentation=https://github.com/moby/buildkit
+
+[Service]
+ExecStart=/usr/local/bin/buildkitd --oci-worker=false --containerd-worker=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
+2. 然后启动 buildkitd
+```shell
+$ sudo systemctl deamon-reload
+$ sudo systemctl enable buildkit --now # 加入开机启动并立刻启动
+$ sudo systemctl status buildkit # 查看运行状态
+```
 
