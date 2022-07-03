@@ -1,5 +1,5 @@
 ---
-title: "win10++避坑指南"
+title: "windows11配置优化"
 date: 2022-07-02
 lastmod: 
 draft: false
@@ -343,7 +343,7 @@ PS C:\Users\yuhh> scoop install windows-terminal pwsh oh-my-posh
 
 #### oh-my-posh 主题美化
 
-根据[官方文档](https://ohmyposh.dev/docs/installation/windows)自定义自己的主题风格
+根据[官方文档](https://ohmyposh.dev/docs/installation/windows)自定义自己的主题风格,
 步骤如下:
 ```powershell
 PS C:\Users\yuhh> Get-PoshThemes
@@ -352,12 +352,48 @@ Themes location: C:\Users\yuhh\scoop\apps\oh-my-posh\current\themes # 所有的�
 To change your theme, adjust the init script in C:\Users\yuhh\OneDrive\文档\PowerShell\Microsoft.PowerShell_profile.ps1.Example:
   oh-my-posh init pwsh --config C:\Users\yuhh\scoop\apps\oh-my-posh\current\themes/jandedobbeleer.omp.json | Invoke-Expression # 输入$PROFILE显示PowerShell_profile.ps1的路径加入提示配置
 ```
-#### 包管理工具
+提示: 需要选择[字体安装](https://www.nerdfonts.com/)
+### 通过 scoop 进行软件管理
 
 通过 scoop 可以很方便的管理日常使用软件，目前scoop源上的windows软件相对齐全，在日常软件开发中省去很多环境配置的工作。
 
 提示：scoop 官方源托管在github上因此需要科学上网，或者用国内的开源镜像站替代。
+```powershell
+➜ scoop -h
+Usage: scoop <command> [<args>]
 
+Some useful commands are:
+
+alias       Manage scoop aliases
+bucket      Manage Scoop buckets
+cache       Show or clear the download cache
+cat         Show content of specified manifest. If available, `bat` will be used to pretty-print the JSON.
+checkup     Check for potential problems
+cleanup     Cleanup apps by removing old versions
+config      Get or set configuration values
+create      Create a custom app manifest
+depends     List dependencies for an app
+download    Download apps in the cache folder and verify hashes
+export      Exports (an importable) list of installed apps
+help        Show help for a command
+hold        Hold an app to disable updates
+home        Opens the app homepage
+info        Display information about an app
+install     Install apps
+list        List installed apps
+prefix      Returns the path to the specified app
+reset       Reset an app to resolve conflicts
+search      Search available apps
+shim        Manipulate Scoop shims
+status      Show status and check for new app versions
+unhold      Unhold an app to enable updates
+uninstall   Uninstall an app
+update      Update apps, or Scoop itself
+virustotal  Look for app's hash or url on virustotal.com
+which       Locate a shim/executable (similar to 'which' on Linux)
+
+Type 'scoop help <command>' to get help for a specific command.
+```
 最终效果如下：
 
 ![](/images/terminal.png)
