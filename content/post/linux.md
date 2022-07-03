@@ -12,6 +12,11 @@ author: yuhh
 
 ## 系统源替换
 
+```shell
+touch  rebuild_repo.sh
+chmod +x rebuild_repo.sh
+```
+
 [阿里云镜像站](https://developer.aliyun.com/mirror/)
 
 ```shell
@@ -24,12 +29,13 @@ _BAK="/etc/yum.repos.d/"$_DATE
 # 备份源
 echo "step1: 正在备份源... "
 mkdir -p $_BAK
-sudo rename '.repo' '.repo.bak' /etc/yum.repos.d/*.repo
-mv /etc/yum.repos.d/*.bak $_BAK
+# sudo rename '.repo' '.repo.bak' /etc/yum.repos.d/*.repo
+cp /etc/yum.repos.d/*.bak $_BAK
 
 # 替换源地址
 echo "step2: 替换repo文件中的链接..."
 # centos 社区 官方源新地址
+cd /etc/yum.repos.d/
 sudo sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS*
 sudo sed -i 's|#baseurl=http://mirror.centos.org|baseurl=https://vault.centos.org|g' /etc/yum.repos.d/CentOS
 
@@ -94,6 +100,7 @@ $ echo $SHELL
 ```shell
 $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"# location in ~/.oh-my-zsh
 $ vim ~/.zshrc # 配置主题和插件
+$ source ~/.zshrc # 使配置文件生效
 ```
 <details>
     <summary>.zshrc</summary>
@@ -214,6 +221,13 @@ Neovim is available through EPEL (Extra Packages for Enterprise Linux)
 ```shell
 $ dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 $ dnf install -y neovim python3-neovim
+```
+上面的方式，官方说可以，但实际上不可以。（尝试以下方式）
+```shell
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+chmod u+x nvim.appimage
+mv ./nvim.appimage /usr/bin/nvim
+
 ```
 ### Neovim 的基本稳定 IDE 配置
 

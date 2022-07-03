@@ -34,16 +34,14 @@ nginx version: nginx/1.14.1
 server {
         listen       443 ssl; #配置HTTPS的默认访问端口为443。如果在此处未配置HTTPS的默认访问端口，可能会导致Nginx无法启动。
         server_name  www.alkaid.club; #修改为您证书绑定的域名。
-        ssl_certificate      /etc/nginx/cert/server.crt; #替换成您的
-证书文件的路径。
-        ssl_certificate_key  /etc/nginx/cert/server.key; #替换成您的
-私钥文件的路径。
+        ssl_certificate      /etc/nginx/cert/server.crt; #替换成您的证书文件的路径。
+        ssl_certificate_key  /etc/nginx/cert/server.key; #替换成您的私钥文件的路径。
         ssl_session_cache    shared:SSL:1m;
         ssl_session_timeout  5m;
         ssl_ciphers  HIGH:!aNULL:!MD5; #加密套件。
         ssl_prefer_server_ciphers  on;
         location / {
-                proxy_pass  http://localhost:8888;
+                proxy_pass  http://localhost:8080;
                 proxy_set_header Host $http_host;
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
