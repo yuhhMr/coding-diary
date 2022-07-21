@@ -15,4 +15,4 @@ if [ `echo $_PID | wc -c` -gt 1 ]; then
 fi
 
 # 启动服务
-hugo server --liveReloadPort 80 -v -w -p $_PORT > $_LOG 2>&1 &
+hugo server --liveReloadPort 443 -v -w -p $_PORT > $_LOG 2>&1 &
