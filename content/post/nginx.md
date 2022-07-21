@@ -118,12 +118,21 @@ INFO[0000] Removing network root_default
 ### nginx 配置
 
 1. 前端静态页面
-    写入到/data/nginx/html路径下
+    写入到/data/compose/nginx/html路径下
 2. nginx 配置
     将配置写入容器的映射外部宿主机的路径下，例如这里的
-    /data/nginx/html
+    /data/compose/nginx/nginx.conf
 3. 日志查看
 ```shell
 ☁  ~  nerdctl logs -f nginx 
 ```
 或者在/data/nginx/log 通过 tail -f filenanme.log 查看
+
+### nginx cmd
+
+```shell
+start nginx # 启动服务
+nginx -s quit # 停止步骤是待nginx进程处理任务完毕进行停止
+nginx -s stop # 相当于先查出nginx进程id再使用kill命令强制杀掉进程
+nginx -s reload  # 重新加载配置文件
+```
