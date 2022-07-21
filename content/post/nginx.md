@@ -70,9 +70,10 @@ server {
 
 ```shell
 ☁  ~  touch docker-compose.yml
-☁  ~  mkdir -p /data/nginx/conf.d
-☁  ~  mkdir -p /data/nginx/html
-☁  ~  mkdir -p /data/nginx/log
+☁  ~  mkdir -p /data/compose/nginx/conf.d
+☁  ~  mkdir -p /data/compose/nginx/html
+☁  ~  mkdir -p /data/compose/nginx/log
+☁  ~  mkdir -p /data/compose/nginx/cert
 ☁  ~  nvim docker-compose.yml # 加入下面内容
 ```
 <details>
@@ -84,11 +85,14 @@ services:
     container_name: nginx
     image:  nginx:latest
     ports:
-      - 81:80
+      - 80:80
+      - 443:443
     volumes:
-      - "/data/nginx/conf.d:/etc/nginx/conf.d"    # 配置文件
-      - "/data/nginx/html:/usr/share/nginx/html"  # 前端工程
-      - "/data/nginx/log:/var/log/nginx"          # 日志文件
+      - /data/compose/nginx/nginx.conf:/etc/nginx/nginx.conf # 配置文件
+      - /data/compose/nginx/conf.d:/etc/nginx/conf.d    # 配置文件
+      - /data/compose/nginx/html:/usr/share/nginx/html  # 前端工程
+      - /data/compose/nginx/log:/var/log/nginx          # 日志文件
+      - /data/compose/nginx/cert:/etc/pki/nginx # HTTPS证书
         </code>
     </pre>
 </details>
