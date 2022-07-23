@@ -87,6 +87,7 @@ services:
     ports:
       - 80:80
       - 443:443
+    restart: always  
     volumes:
       - /data/compose/nginx/nginx.conf:/etc/nginx/nginx.conf # 配置文件
       - /data/compose/nginx/conf.d:/etc/nginx/conf.d    # 配置文件
