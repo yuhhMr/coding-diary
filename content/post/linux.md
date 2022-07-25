@@ -1,5 +1,5 @@
 ---
-title: "服务器环境部署"
+title: "centos8 服务部署"
 date: 2022-07-01
 lastmod: 
 draft: false

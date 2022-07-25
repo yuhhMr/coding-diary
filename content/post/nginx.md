@@ -1,5 +1,5 @@
 ---
-title: "反向代理服务器"
+title: "nginx"
 date: 2022-07-03
 lastmod: 
 draft: false

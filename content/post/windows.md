@@ -1,5 +1,5 @@
 ---
-title: "windows11配置优化"
+title: "win11配置优化"
 date: 2022-07-02
 lastmod: 
 draft: false

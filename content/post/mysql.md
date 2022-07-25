@@ -1,5 +1,5 @@
 ---
-title: "关系型数据库mysql"
+title: "mysql"
 date: 2022-07-22
 lastmod: 
 draft: false

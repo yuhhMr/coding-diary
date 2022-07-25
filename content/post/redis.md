@@ -1,5 +1,5 @@
 ---
-title: "缓存数据库redis"
+title: "redis"
 date: 2022-07-23
 lastmod: 
 draft: false
